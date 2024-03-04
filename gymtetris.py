@@ -82,13 +82,13 @@ class TetrisWrapper(gym.Env):
 
 
 def main():
-    env = TetrisWrapper(gym.make('TetrisA-v3'))
+    env = TetrisWrapper(gym.make('TetrisA-v0'))
     env = JoypadSpace(env, SIMPLE_MOVEMENT)
-    model = PPO.load("tetris_model_improved.zip")
+    model = PPO.load("CRASH_SAVED_MODEL.zip")
 
     obs = env.reset()
 
-    for _ in range(1000):
+    for _ in range(1000000):
         action, _states = model.predict(obs.copy(), deterministic=True)
         # Directly convert the action to an integer
         action = int(action)
