@@ -1,29 +1,53 @@
-from nes_py.wrappers import JoypadSpace
+import time
+
+import gym
+from gym import spaces
 import gym_tetris
-from gym_tetris.actions import MOVEMENT
+from stable_baselines3 import PPO
 
-env = gym_tetris.make('TetrisA-v0')
-env = JoypadSpace(env, MOVEMENT)
+import gym
+import numpy as np
 
-# button_map = {
-#         'right':  0b10000000,
-#         'left':   0b01000000,
-#         'down':   0b00100000,
-#         'up':     0b00010000,
-#         'start':  0b00001000,
-#         'select': 0b00000100,
-#         'B':      0b00000010,
-#         'A':      0b00000001,
-#         'NOOP':   0b00000000,
-#     }
+class TetrisWrapper(gym.Env):
+    def __init__(self, env):
+        self.env = env
+        self.action_space = self.env.action_space
+        self.observation_space = self.env.observation_space
 
-done = True
-for step in range(5000):
-    if done:
-        state = env.reset()
+    def reset(self):
+        obs = self.env.reset()
+        return obs, {}  # Add an empty info dictionary
 
-    action = 8 if step % 2 == 1 else 0
-    state, reward, done, info = env.step(action)
-    env.render()
+    def step(self, action):
+        obs, reward, done, info = self.env.step(action)
+        if isinstance(done, bool):
+            done = (done, False)  # Convert to a tuple if necessary
+        return obs, reward, done, info
 
-env.close()
+    def render(self, mode='human', **kwargs):
+        return self.env.render(mode=mode, **kwargs)
+
+    def close(self):
+        self.env.close()
+
+
+def main():
+    env = TetrisWrapper(gym.make('TetrisA-v3'))
+    model = PPO.load("tetris_model5.zip")
+
+    # Adjust here: Unpack the tuple and get only the observation
+    obs, _ = env.reset()
+
+    for _ in range(1000):
+        action, _states = model.predict(obs.copy(), deterministic=True)
+        obs, rewards, done, info = env.step(action)
+        env.render()
+
+        if done:
+            # Again, unpack the tuple
+            obs, _ = env.reset()
+
+    env.close()
+
+if __name__ == "__main__":
+    main()

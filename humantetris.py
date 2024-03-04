@@ -7,7 +7,7 @@ from keyboard import is_pressed
 from keyboard import on_release_key
 from keyboard import on_press_key
 
-env = gym_tetris.make('TetrisA-v0')
+env = gym_tetris.make('TetrisA-v3')
 env = JoypadSpace(env, MOVEMENT)
 # button_map = {
 #         'right' | left B:  0b10000000, 8 rotates left
@@ -31,6 +31,8 @@ env = JoypadSpace(env, MOVEMENT)
 #   rotate 90 counter-clockwise: 2
 
 action = 0
+
+
 class Input:
     def __init__(self):
         print('initialized')
