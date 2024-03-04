@@ -40,7 +40,7 @@ def wrap_env(env):
 
 def main():
     # Create and wrap the original environment
-    env = gym.make('TetrisA-v0')
+    env = gym.make('TetrisA-v3')
     env = JoypadSpace(env, SIMPLE_MOVEMENT)
     env = wrap_env(env)  # Apply the wrapper that handles reset
 
@@ -57,8 +57,8 @@ def main():
                 clip_range=0.2,
                 ent_coef=0.01)
 
-    model.learn(total_timesteps=25000)
-    model.save("tetris_model_improved")
+    model.learn(total_timesteps=150000)
+    model.save("tetris_model_improved2")
 
     # Instantiate the PPO agent
     # model = PPO("MlpPolicy", vec_env, verbose=1, device=device)
