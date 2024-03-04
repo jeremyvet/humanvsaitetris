@@ -1,7 +1,6 @@
 from nes_py.wrappers import JoypadSpace
 import gym_tetris
 from gym_tetris.actions import MOVEMENT
-import pygame
 import keyboard
 from keyboard import is_pressed
 from keyboard import on_release_key
